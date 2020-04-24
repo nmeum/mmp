@@ -4,7 +4,7 @@
 (require [hy.contrib.walk [let]])
 
 (defclass SongQueue []
-  (defn __init__ [self]
+  (defn --init-- [self]
     (setv self.player (GstPlayer))
     (setv self.player-lock (Lock))
     (setv self.queue (Queue))

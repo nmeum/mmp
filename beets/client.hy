@@ -13,7 +13,7 @@
       "Accept" "application/json"
     }))
 
-  (defn _send_req [self path &optional [method None] [data None]]
+  (defn -send-req [self path &optional [method None] [data None]]
     (let [url (urljoin self.base-url (urllib.parse.quote path))
           req (Request url :headers self.headers
                            :method method
@@ -27,4 +27,4 @@
           (raise))))))
 
   (defn find-item [self path]
-    (self._send_req (+ "/item/path/" path))))
+    (.-send-req self (+ "/item/path/" path))))

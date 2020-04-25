@@ -1,9 +1,9 @@
 (import [threading [Lock Semaphore Thread]]
     [queue [Queue]]
-    [playback.player [*]])
+    [playback.gstplayer [GstPlayer]])
 (require [hy.contrib.walk [let]])
 
-(defclass SongQueue []
+(defclass Player []
   (defn --init-- [self]
     (setv self.player (GstPlayer))
     (setv self.player-lock (Lock))

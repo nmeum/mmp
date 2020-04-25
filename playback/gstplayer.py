@@ -95,6 +95,22 @@ class GstPlayer(object):
             raise RuntimeError("GStreamer Error: {}".format(err))
             self.playing = False
 
+    def state(self):
+        """Return current player state as a string."""
+        state = self._get_state()
+        if state == Gst.State.VOID_PENDING:
+            return "pending"
+        elif state == Gst.State.NULL:
+            return "stop"
+        elif state == Gst.State.READY:
+            return "ready"
+        elif state == Gst.State.PAUSED:
+            return "pause"
+        elif state == Gst.State.PLAYING:
+            return "playing"
+
+        raise RuntimeError("invalid player state")
+
     def play_file(self, path):
         """Immediately begin playing the audio file at the given
         path.

@@ -21,7 +21,7 @@ library manager [beets][beets homepage] for database management.
 
 ## Status
 
-To-do.
+Proof of concept, buggy and totally incomplete at the moment.
 
 ## Dependencies
 

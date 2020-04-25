@@ -27,4 +27,7 @@
           (raise))))))
 
   (defn find-item [self path]
-    (.-send-req self (+ "/item/path/" path))))
+    (.-send-req self (+ "/item/path/" path)))
+
+  (defn query-items [self query]
+    (get (.-send-req self (+ "/item/query/" query)) "results")))

@@ -8,7 +8,8 @@
 
 (with-decorator (commands.add "status")
   (defn status [playback beets cmd]
-    (let [mode (playback.playlist.get-mode)
+    (let [playlist playback.playlist
+          mode (playlist.get-mode)
           state (with (player playback) (player.state))]
       {
         "volume"         100
@@ -16,6 +17,6 @@
         "random"         (get mode :random)
         "single"         (get mode :single)
         "consume"        (get mode :consume)
-        "playlistlength" 0
+        "playlistlength" (playlist.psize)
         "state"          state ;; TODO: check if state is a valid MPD state
       })))

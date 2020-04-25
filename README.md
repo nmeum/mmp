@@ -4,6 +4,8 @@ The mini music player, an alternative to MPD.
 
 ## Motivation
 
+> All music player daemons suck. This one just sucks less.
+
 I've been using [MPD][mpd homepage] as my primary music player for the
 last decade or so. I like the idea of controlling my music player using
 a network protocol but MPD itself tries to do too many things at once.

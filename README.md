@@ -40,20 +40,25 @@ As such, this software has the following dependencies:
 	* Including the [web plugin][beets web]
 	* Required configuration is described below
 
-## Usage
+## Setup
 
-Setup [libmpdserver][libmpdserver github] using:
+The library libmpdserver is still in early stages of development. As
+such, I haven't tagged releases or provided install scripts yet. For
+this reason, just build the library manually for now using:
 
 	$ git clone --recursive https://github.com/nmeum/libmpdserver
 	$ make -C libmpdserver libmpdserver.so
 
-Install [beets][beets homepage], setup the [web plugin][beets web] and run:
+Afterwards, setup the beets web plugin by following the upstream
+[instructions][beets web]. This presupposes that [beets][beets homepage]
+itself has already been setup. Regarding the configuration of this
+plugin, the `include_paths` option **must** be enabled. For example, by
+adding the following to your beets configuration file:
 
-	$ beet web
+	web:
+	  include_paths: True
 
-The `include_paths` options needs to be enabled for the web plugin.
-
-Install [hy][hy homepage] and [py3-gst][py3-gst homepage]. Afterwards run:
+Finally, invoke mmp itself using:
 
 	$ export LD_LIBRARY_PATH="<PATH TO LIBMPDSERVER REPOSITORY>"
 	$ hy mmp.hy "<URL OF BEETS WEB PLUGIN>"

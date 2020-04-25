@@ -4,7 +4,20 @@ The mini music player, an alternative to MPD.
 
 ## Motivation
 
-To-do.
+I've been using [MPD][mpd homepage] as my primary music player for the
+last decade or so. I like the idea of controlling my music player using
+a network protocol but MPD itself tries to do too many things at once.
+My original attempt at replacing MPD was [mpvd][mpvd github] which
+provided an implementation of the [MPD protocol][mpd protocol] for
+controlling the multimedia player [mpv][mpv homepage]. Unfortunately,
+the protocol mapping turned out to be more complicated than initially
+conceived and therefore the project was abandoned.
+
+This project is a new attempt at replacing my [MPD][mpd homepage] setup
+with a simpler software which handles playback and music database
+management separately. Instead of mpv, it currently uses the library
+[gstreamer][gstreamer homepage]. Additionally, it relies on the music
+library manager [beets][beets homepage] for database management.
 
 ## Status
 
@@ -14,7 +27,7 @@ To-do.
 
 This software provides the required glue code for combining:
 
-* [gstreamer][gstreamer website]
+* [gstreamer][gstreamer homepage]
 * [libmpdserver][libmpdserver github]
 * [beets webapi][https://beets.readthedocs.io/en/latest/plugins/web.html]
 
@@ -56,4 +69,9 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
 [beets web]: https://beets.readthedocs.io/en/latest/plugins/web.html
 [hy homepage]: https://docs.hylang.org
 [py3-gst homepage]: https://gstreamer.freedesktop.org/bindings/python.html
-[gstreamer website]: https://gstreamer.freedesktop.org/
+[gstreamer homepage]: https://gstreamer.freedesktop.org/
+[mpd homepage]: https://musicpd.org/
+[mpd protocol]: https://musicpd.org/doc/html/protocol.html
+[mpvd github]: https://github.com/nmeum/mpvd
+[mpv homepage]: https://mpv.io/
+[mpv protocol]: https://mpv.io/manual/master/#json-ipc

@@ -26,10 +26,10 @@
           (assoc self.handlers name func)
           func))))
 
-  (defn call [self songs beets cmd]
+  (defn call [self player beets cmd]
     (if (in cmd.name self.handlers)
       (let [handler (get self.handlers cmd.name)
-            resp    (handler songs beets cmd.args)]
+            resp    (handler player beets cmd.args)]
         (if (isinstance resp dict)
           (self.dict->mpdstr resp)
           resp))

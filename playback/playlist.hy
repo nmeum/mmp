@@ -51,6 +51,11 @@
     (with (self.list-lock)
       (.remove self.list path)))
 
+  (defn select [self index]
+    (if (>= index (len self.list))
+      (raise (IndexError "song position out of range"))
+      (setv self.cur-index index)))
+
   (defn next-song [self]
     (defn next-index [mode]
       ;; TODO: Handle repeat mode

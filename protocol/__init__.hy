@@ -26,7 +26,7 @@
           (assoc self.handlers name func)
           func))))
 
-  (defn call [self playback beets cmd]
+  (defn handle [self playback beets cmd]
     (if (in cmd.name self.handlers)
       (let [handler (get self.handlers cmd.name)
             resp    (handler playback beets cmd.args)]

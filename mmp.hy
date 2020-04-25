@@ -20,7 +20,7 @@
     (self.server.shutdown)))
 
 (defn start-server [addr port playback beets]
-  (let [handler  (fn [cmd] (commands.call playback beets cmd))]
+  (let [handler  (fn [cmd] (commands.handle playback beets cmd))]
     (with [server (Server (, addr port) handler)]
       (.start (CleanupThread server))
       (server.serve-forever))))

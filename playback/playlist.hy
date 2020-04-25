@@ -35,6 +35,10 @@
     (with (self.mode-lock)
       self.mode))
 
+  (defn get-position [self]
+    (with (self.list-lock)
+      self.cur-index))
+
   (defn add-song [self path]
     (with (self.list-lock)
       (.append self.list path)))

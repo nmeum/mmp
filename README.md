@@ -29,7 +29,16 @@ This software provides the required glue code for combining:
 
 * [gstreamer][gstreamer homepage]
 * [libmpdserver][libmpdserver github]
-* [beets webapi][https://beets.readthedocs.io/en/latest/plugins/web.html]
+* [beets][beets homepage]
+
+As such, this software has the following dependencies:
+
+* The [hy][hy homepage] programming language
+* The [gst-python][py3-gst homepage] module
+* The [libmpdserver][libmpdserver github] parser library
+* The [beets][beets homepage] music manager
+	* Including the [web plugin][beets web]
+	* Required configuration is described below
 
 ## Usage
 

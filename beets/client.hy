@@ -34,5 +34,10 @@
         (.-send-req self (.format "/item/{}" id))]
       [True (raise (TypeError "invalid argument type"))]))
 
+  (defn find-items [self ids]
+    (.-send-req self (.format "/item/{}"
+                              (.join ","
+                                (list (map (fn [id] (str id)) ids))))))
+
   (defn query-items [self query]
     (get (.-send-req self (+ "/item/query/" query)) "results")))

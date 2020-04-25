@@ -8,4 +8,13 @@
 
 (with-decorator (commands.add "status")
   (defn status [playback beets cmd]
-    None))
+    (let [mode (playback.playlist.get-mode)]
+      {
+        "volume"         100
+        "repeat"         (get mode :repeat)
+        "random"         (get mode :random)
+        "single"         (get mode :single)
+        "consume"        (get mode :consume)
+        "playlistlength" 0
+        "state"          "stop"
+      })))

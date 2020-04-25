@@ -3,14 +3,14 @@
     [playback.playlist [Playlist]])
 (require [hy.contrib.walk [let]])
 
-(defclass Player []
+(defclass Playback []
   (defn --init-- [self]
-    (setv self.backend (GstPlayer))
-    (setv self.backend-lock (Lock))
+    (setv self.player (GstPlayer))
+    (setv self.player-lock (Lock))
     (setv self.playlist (Playlist))
     (setv self.play-event (Semaphore 0))
 
-    (.run self.backend)
+    (.run self.player)
     (setv self.thread (Thread :target self.playback
                               :daemon True))
     (.start self.thread))
@@ -20,8 +20,8 @@
 
   (defn pause [self]
     (.clear self.play-event)
-    (with (self.backend-lock)
-      (.pause self.backend)))
+    (with (self.player-lock)
+      (.pause self.player)))
 
   (defn playback [self]
     (while True
@@ -29,13 +29,13 @@
       (let [path (.next-song self.playlist)]
         (if (is None path)
           (.wait self.play-event))
-        (with (self.backend-lock)
-          (.play-file self.backend path)))
-      (.block self.backend)))
+        (with (self.player-lock)
+          (.play-file self.player path)))
+      (.block self.player)))
 
   (defn --enter-- [self]
-    (.acquire self.backend-lock)
-    self.backend)
+    (.acquire self.player-lock)
+    self.player)
 
   (defn --exit-- [self type value traceback]
-    (.release self.backend-lock)))
+    (.release self.player-lock)))

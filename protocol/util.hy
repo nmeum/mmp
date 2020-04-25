@@ -20,8 +20,8 @@
             dict)
           (.items metadata) {}))
 
-(defn current-song [player beets]
-  (let [path (with [song player] song.path)]
+(defn current-song [playback beets]
+  (let [path (with [player playback] player.path)]
     (if (is None path)
       None
       (convert-song (.find-item beets path)))))

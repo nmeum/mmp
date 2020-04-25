@@ -1,7 +1,7 @@
 (import argparse mpd threading signal
   [mpd.server [Server]]
   [protocol [commands status]]
-  [playback.player [Player]]
+  [playback.playback [Playback]]
   [beets.client [Client]])
 (require [hy.contrib.walk [let]])
 
@@ -19,8 +19,8 @@
     (self.lock.acquire)
     (self.server.shutdown)))
 
-(defn start-server [addr port player beets]
-  (let [handler  (fn [cmd] (commands.call player beets cmd))]
+(defn start-server [addr port playback beets]
+  (let [handler  (fn [cmd] (commands.call playback beets cmd))]
     (with [server (Server (, addr port) handler)]
       (.start (CleanupThread server))
       (server.serve-forever))))
@@ -34,5 +34,5 @@
     (parser.add-argument "-a" :type str :metavar "ADDR"
       :default "localhost" :help "Address the MPD server binds to")
     (let [args (parser.parse-args)]
-      (start-server args.a args.p (Player) (Client args.URL))))
+      (start-server args.a args.p (Playback) (Client args.URL))))
   0)

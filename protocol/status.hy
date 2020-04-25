@@ -3,9 +3,9 @@
 (require [hy.contrib.walk [let]])
 
 (with-decorator (commands.add "currentsong")
-  (defn current-song [player beets cmd]
-    (util.current-song player beets)))
+  (defn current-song [playback beets cmd]
+    (util.current-song playback beets)))
 
 (with-decorator (commands.add "status")
-  (defn status [player beets cmd]
+  (defn status [playback beets cmd]
     None))

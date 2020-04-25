@@ -29,6 +29,8 @@ Install [beets][beets homepage], setup the [web plugin][beets web] and run:
 
 	$ beet web
 
+The `include_paths` options needs to be enabled for the web plugin.
+
 Install [hy][hy homepage] and [py3-gst][py3-gst homepage]. Afterwards run:
 
 	$ export LD_LIBRARY_PATH="<PATH TO LIBMPDSERVER REPOSITORY>"

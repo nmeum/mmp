@@ -9,15 +9,18 @@ The mini music player, an alternative to MPD.
 I've been using [MPD][mpd homepage] as my primary music player for the
 last decade or so. I like the idea of controlling my music player using
 a network protocol but MPD itself tries to do too many things at once.
-My original attempt at replacing MPD was [mpvd][mpvd github] which
-provided an implementation of the [MPD protocol][mpd protocol] for
-controlling the multimedia player [mpv][mpv homepage]. Unfortunately,
-the protocol mapping turned out to be more complicated than initially
-conceived and therefore the project was abandoned.
+Since I am not interested in building my own music player clients, I
+always intended to write an alternative implementation of the network
+protocol used by MPD. My original attempt at doing so was
+[mpvd][mpvd github] which provided an implementation of the
+[MPD protocol][mpd protocol] for controlling the multimedia player
+[mpv][mpv homepage]. Unfortunately, the protocol mapping turned out to
+be more complicated than initially conceived and therefore the project
+was later abandoned.
 
 This project is a new attempt at replacing my [MPD][mpd homepage] setup
 with a simpler software which handles playback and music database
-management separately. Instead of mpv, it currently uses the library
+management separately. Instead of mpv, it currently uses
 [gstreamer][gstreamer homepage]. Additionally, it relies on the music
 library manager [beets][beets homepage] for database management.
 

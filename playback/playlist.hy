@@ -1,5 +1,6 @@
 (import [threading [Lock Semaphore Thread]]
-        [random [randrange]])
+        [random [randrange]]
+        os)
 (require [hy.contrib.walk [let]])
 
 (defclass Playlist []
@@ -40,8 +41,11 @@
       self.cur-index))
 
   (defn add-song [self path]
-    (with (self.list-lock)
-      (.append self.list path)))
+    (if (not (os.path.isfile path))
+      (raise (FileNotFoundError
+               (.format "file '{}' does not exist" path)))
+      (with (self.list-lock)
+        (.append self.list path))))
 
   (defn del-song [self path]
     (with (self.list-lock)

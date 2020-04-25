@@ -18,6 +18,18 @@
   (defn play [self]
     (.set self.play-event))
 
+  (defn stop [self]
+    (.clear self.play-event)
+    (with (self.player-lock)
+      (.stop self.player)))
+
+  ;; XXX: Block until playback started?
+  (defn play-song [self index]
+    (with (self.playlist.list-lock)
+      (.stop self.player)
+      (.select self.playlist index)
+      (.play self.player)))
+
   (defn pause [self]
     (.clear self.play-event)
     (with (self.player-lock)

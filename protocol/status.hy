@@ -3,11 +3,11 @@
 (require [hy.contrib.walk [let]])
 
 (with-decorator (commands.add "currentsong")
-  (defn current-song [playback beets cmd]
+  (defn current-song [playback beets args]
     (util.current-song playback beets)))
 
 (with-decorator (commands.add "status")
-  (defn status [playback beets cmd]
+  (defn status [playback beets args]
     (let [playlist playback.playlist
           mode (playlist.get-mode)
           state (with (player playback) (player.state))]

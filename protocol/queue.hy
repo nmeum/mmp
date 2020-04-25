@@ -4,6 +4,7 @@
   [hy.contrib.walk [let]])
 
 (with-decorator (commands.add "add")
+  ;; Requiries https://github.com/beetbox/beets/pull/3567 to work correctly
   (defn add [playback beets args]
     (let [path  (first args)
           query (.format "path:{}" path)

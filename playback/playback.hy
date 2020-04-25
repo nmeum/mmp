@@ -8,7 +8,7 @@
     (setv self.player (GstPlayer))
     (setv self.player-lock (Lock))
     (setv self.playlist (Playlist))
-    (setv self.play-event (Semaphore 0))
+    (setv self.play-event (Event))
 
     (.run self.player)
     (setv self.thread (Thread :target self.playback

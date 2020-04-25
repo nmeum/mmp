@@ -26,8 +26,13 @@
           None
           (raise))))))
 
-  (defn find-item [self path]
-    (.-send-req self (+ "/item/path/" path)))
+  (defn find-item [self id]
+    (cond
+      [(isinstance id str)
+        (.-send-req self (.format "/item/path/{}" id))]
+      [(isinstance id int)
+        (.-send-req self (.format "/item/{}" id))]
+      [True (raise (TypeError "invalid argument type"))]))
 
   (defn query-items [self query]
     (get (.-send-req self (+ "/item/query/" query)) "results")))

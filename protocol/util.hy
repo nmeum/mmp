@@ -13,10 +13,16 @@
     "disc"         "Disc"
     "albumartist"  "AlbumArtist"
     "id"           "Id"
-    ;; TODO: length
+    "length"       "duration"
     ;; TODO: Pos
     ;; TODO: Last-Modified
   })
+
+;; Functions for converting a value of the given beets tag name to
+;; the representation used by the corresponding MPD tag (see above).
+(setv conversion-funcs {
+  "length" (fn [v] (round v 3))
+})
 
 (defn beets->song [metadata]
   (defn convert-meta [metadata]
@@ -25,10 +31,16 @@
         (or (is None value) (= (len value) 0))
         (except [TypeError] False)))
 
+  (defn convert-value [tag value]
+    (try
+      ((get conversion-funcs tag) value)
+      (except [KeyError] value)))
+
     (reduce (fn [dict pair]
               (if (and (in (first pair) MPD-TAG-NAMES)
                        (not (is-unset (last pair))))
-                (assoc dict (get MPD-TAG-NAMES (first pair)) (last pair)))
+                (assoc dict (get MPD-TAG-NAMES (first pair))
+                            (convert-value (first pair) (last pair))))
               dict)
             (.items metadata) {}))
 

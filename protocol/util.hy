@@ -16,14 +16,14 @@
 
 (defn beets->song [metadata]
   (defn convert-meta [metadata]
-    (defn is-empty [value]
+    (defn is-unset [value]
       (try
         (or (is None value) (= (len value) 0))
         (except [TypeError] False)))
 
     (reduce (fn [dict pair]
               (if (and (in (first pair) MPD-TAG-NAMES)
-                       (not (is-empty (last pair))))
+                       (not (is-unset (last pair))))
                 (assoc dict (get MPD-TAG-NAMES (first pair)) (last pair)))
               dict)
             (.items metadata) {}))

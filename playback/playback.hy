@@ -24,11 +24,11 @@
       (if (= (.state self) "pause")
         (with (self._player-lock)
           (.play self._player))
-        (let [path (with (p self) (.next p))]
-          (if (is None path)
+        (let [song (with (p self) (.next p))]
+          (if (is None song)
             (.acquire self._play-start))
           (with (self._player-lock)
-            (.play-file self._player path))))
+            (.play-file self._player (. song path)))))
       (.block self._player)))
 
   (defn state [self]
@@ -44,10 +44,10 @@
 
   (defn play [self &optional index]
     (if (not (is None index))
-      (let [path (with (p self) (.get p index))]
+      (let [song (with (p self) (.get p index))]
         (with (self._player-lock)
           (.stop self)
-          (.set-file self._player path))))
+          (.set-file self._player (. song path)))))
     (try
       (.release self._play-start)
       (except [ValueError])))

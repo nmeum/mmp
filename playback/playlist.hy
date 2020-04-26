@@ -1,6 +1,18 @@
 (import [random [randrange]] os)
 (require [hy.contrib.walk [let]])
 
+(defclass Song []
+  (setv path None)
+  (setv metadata {})
+
+  (defn --init-- [self path metadata]
+    (if (not (os.path.isfile path))
+      (raise (FileNotFoundError
+               (.format "file '{}' does not exist" path))))
+
+    (setv self.path path)
+    (setv self.metadata metadata)))
+
 (defclass Playlist []
   (setv mode {
       :repeat False :random False
@@ -19,11 +31,10 @@
       None
       (get self._list self._current)))
 
-  (defn add [self path]
-    (if (not (os.path.isfile path))
-      (raise (FileNotFoundError
-               (.format "file '{}' does not exist" path)))
-      (.append self._list path)))
+  (defn add [self song]
+    (if (isinstance song Song)
+      (.append self._list song)
+      (raise (TypeError "not an instance of Song"))))
 
   (defn get [self index]
     (if (>= index (len self._list))

@@ -5,10 +5,7 @@
 (with-decorator (commands.add "currentsong")
   (defn current-song [playback beets args]
     (with (playlist playback)
-      (let [path (.current playlist)]
-        (if (is None path)
-          None
-          (util.convert-song (.find-item beets path)))))))
+      (.current playlist))))
 
 (with-decorator (commands.add "status")
   (defn status [playback beets args]

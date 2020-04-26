@@ -1,3 +1,4 @@
+(import [playback.playlist [Song]])
 (require [hy.contrib.walk [let]]
          [hy.extra.anaphoric [*]])
 
@@ -13,9 +14,13 @@
     "albumartist"  "AlbumArtist"
   })
 
-(defn convert-song [metadata]
-  (reduce (fn [dict pair]
-            (if (in (first pair) MPD-TAG-NAMES)
-              (assoc dict (get MPD-TAG-NAMES (first pair)) (last pair)))
-            dict)
-          (.items metadata) {}))
+(defn beets->song [metadata]
+  (defn convert-meta [metadata]
+    (reduce (fn [dict pair]
+              (if (in (first pair) MPD-TAG-NAMES)
+                (assoc dict (get MPD-TAG-NAMES (first pair)) (last pair)))
+              dict)
+            (.items metadata) {}))
+
+  (Song (get metadata "path")
+        (convert-meta metadata)))

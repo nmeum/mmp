@@ -1,4 +1,5 @@
-(import mpd)
+(import mpd
+  [playback.playlist [Song]])
 (require [hy.contrib.walk [let]])
 
 (defclass Commands [object]
@@ -30,9 +31,10 @@
     (if (in cmd.name self.handlers)
       (let [handler (get self.handlers cmd.name)
             resp    (handler playback beets cmd.args)]
-        (if (isinstance resp dict)
-          (self.dict->mpdstr resp)
-          resp))
+        (cond
+          [(isinstance resp dict) (self.dict->mpdstr resp)]
+          [(isinstance resp Song) (self.dict->mpdstr (. resp metadata))]
+          [True resp]))
       (raise (NotImplementedError (% "%s has not ben implemented" cmd.name))))))
 
 (setv commands (Commands))

@@ -1,5 +1,6 @@
 (import [protocol [commands]]
-  [mpd.exceptions [*]])
+  [mpd.exceptions [*]]
+  [protocol.util :as util])
 (require [hy.extra.anaphoric [*]]
   [hy.contrib.walk [let]])
 
@@ -11,7 +12,7 @@
       (if items
         (with (playlist playback)
           (try
-            (ap-each items (.add playlist (get it "path")))
+            (ap-each items (.add playlist (util.beets->song it)))
           (except [FileNotFoundError]
             (raise no-exist))))
         (raise no-exist)))))

@@ -4,11 +4,9 @@
   [hy.contrib.walk [let]])
 
 (with-decorator (commands.add "add")
-  ;; Requiries https://github.com/beetbox/beets/pull/3567 to work correctly
   (defn add [playback beets args]
     (let [path     (first args)
-          query    (.format "path:{}" path)
-          items    (.query-items beets query)
+          items    (.query-path beets path)
           no-exist (MPDException ACKError.NO_EXIST "no such file")]
       (if items
         (with (playlist playback)

@@ -35,4 +35,8 @@
       [True (raise (TypeError "invalid argument type"))]))
 
   (defn query-items [self query]
-    (get (.-send-req self (+ "/item/query/" query)) "results")))
+    (get (.-send-req self (+ "/item/query/" query)) "results"))
+
+  ;; Requiries https://github.com/beetbox/beets/pull/3567
+  (defn query-path [self path]
+    (.query-items self (.format "path:{}" (.replace path "/" "\\")))))

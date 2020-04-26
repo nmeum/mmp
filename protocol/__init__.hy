@@ -12,6 +12,14 @@
              (if value 1 0)
              value)]))
 
+  (defn convert-song [self song]
+    (self.dict->mpdstr
+      {#**
+        (. song metadata)
+       #**
+        { "file" (. song path) }
+      }))
+
   (defn dict->mpdstr [self dict]
     (.rstrip (reduce (fn [rest pair]
                        (+ rest
@@ -33,7 +41,7 @@
             resp    (handler playback beets cmd.args)]
         (cond
           [(isinstance resp dict) (self.dict->mpdstr resp)]
-          [(isinstance resp Song) (self.dict->mpdstr (. resp metadata))]
+          [(isinstance resp Song) (self.convert-song resp)]
           [True resp]))
       (raise (NotImplementedError (% "%s has not ben implemented" cmd.name))))))
 

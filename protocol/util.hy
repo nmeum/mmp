@@ -19,9 +19,3 @@
               (assoc dict (get MPD-TAG-NAMES (first pair)) (last pair)))
             dict)
           (.items metadata) {}))
-
-(defn current-song [playback beets]
-  (let [path (with [player playback] player.path)]
-    (if (is None path)
-      None
-      (convert-song (.find-item beets path)))))

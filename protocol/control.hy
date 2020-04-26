@@ -6,6 +6,9 @@
 (with-decorator (commands.add "play")
   (defn add [playback beets args]
     (if args
-      (playback.play-song (first args))
+      (try
+        (playback.play (first args))
+        (except [e IndexError]
+          (raise (MPDException ACKError.ARG "Bad song index"))))
       (playback.play))
     None))

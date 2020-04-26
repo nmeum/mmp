@@ -1,53 +1,71 @@
-(import [threading [Lock Event Thread]]
+(import [threading [*]]
     [playback.gstplayer [GstPlayer]]
     [playback.playlist [Playlist]])
 (require [hy.contrib.walk [let]])
 
 (defclass Playback []
   (defn --init-- [self]
-    (setv self.player (GstPlayer))
-    (setv self.player-lock (Lock))
-    (setv self.playlist (Playlist))
-    (setv self.play-event (Event))
+    (setv self._player (GstPlayer))
+    (setv self._player-lock (RLock))
+    (setv self._playlist (Playlist))
+    (setv self._playlist-lock (Lock))
 
-    (.run self.player)
-    (setv self.thread (Thread :target self.playback
+    (setv self._play-start (BoundedSemaphore 1))
+    (.acquire self._play-start)
+
+    (.run self._player)
+    (setv self._thread (Thread :target self._playback
                               :daemon True))
-    (.start self.thread))
+    (.start self._thread))
 
-  (defn play [self]
-    (.set self.play-event))
+  (defn _playback [self]
+    (while True
+      (.acquire self._play-start)
+      (if (= (.state self) "pause")
+        (with (self._player-lock)
+          (.play self._player))
+        (let [path (with (p self) (.next p))]
+          (if (is None path)
+            (.acquire self._play-start))
+          (with (self._player-lock)
+            (.play-file self._player path))))
+      (.block self._player)))
 
-  (defn stop [self]
-    (.clear self.play-event)
-    (with (self.player-lock)
-      (.stop self.player)))
+  (defn state [self]
+    (let [state (with (self._player-lock)
+                      (.state self._player))]
+      (cond
+        [(= state "play") "play"]
+        [(= state "pause") "pause"]
+        [True "stop"])))
 
-  ;; XXX: Block until playback started?
-  (defn play-song [self index]
-    (with (self.playlist.list-lock)
-      (.stop self.player)
-      (.select self.playlist index)
-      (.play self.player)))
+  ;; TODO: Make methods block until state actually changed?
+  ;; In general: How should intertwined state changes be handled?
+
+  (defn play [self &optional index]
+    (if (not (is None index))
+      (let [path (with (p self) (.get p index))]
+        (with (self._player-lock)
+          (.stop self)
+          (.set-file self._player path))))
+    (try
+      (.release self._play-start)
+      (except [ValueError])))
 
   (defn pause [self]
-    (.clear self.play-event)
-    (with (self.player-lock)
-      (.pause self.player)))
+    (with (self._player-lock)
+      (.pause self._player)))
 
-  (defn playback [self]
-    (while True
-      (.wait self.play-event)
-      (let [path (.next-song self.playlist)]
-        (if (is None path)
-          (.wait self.play-event))
-        (with (self.player-lock)
-          (.play-file self.player path)))
-      (.block self.player)))
+  (defn stop [self]
+    (with (self._player-lock)
+      (.stop self._player)))
 
   (defn --enter-- [self]
-    (.acquire self.player-lock)
-    self.player)
+    """Context manager for aquiring access to the underlying playlist.
+       All code executed in the context manager will be executed atomic
+       on the playlist object, i.e. the song won't be changed in between."""
+    (.acquire self._playlist-lock)
+    self._playlist)
 
   (defn --exit-- [self type value traceback]
-    (.release self.player-lock)))
+    (.release self._playlist-lock)))

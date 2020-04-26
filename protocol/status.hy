@@ -4,19 +4,22 @@
 
 (with-decorator (commands.add "currentsong")
   (defn current-song [playback beets args]
-    (util.current-song playback beets)))
+    (with (playlist playback)
+      (let [path (.current playlist)]
+        (if (is None path)
+          None
+          (util.convert-song (.find-item beets path)))))))
 
 (with-decorator (commands.add "status")
   (defn status [playback beets args]
-    (let [playlist playback.playlist
-          mode (playlist.get-mode)
-          state (with (player playback) (player.state))]
-      {
-        "volume"         100
-        "repeat"         (get mode :repeat)
-        "random"         (get mode :random)
-        "single"         (get mode :single)
-        "consume"        (get mode :consume)
-        "playlistlength" (playlist.psize)
-        "state"          state ;; TODO: check if state is a valid MPD state
-      })))
+    (with (playlist playback)
+      (let [mode (. playlist mode)]
+        {
+          "volume"         100
+          "repeat"         (get mode :repeat)
+          "random"         (get mode :random)
+          "single"         (get mode :single)
+          "consume"        (get mode :consume)
+          "playlistlength" (playlist.psize)
+          "state"          (playback.state)
+        }))))

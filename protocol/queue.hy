@@ -11,9 +11,9 @@
           items    (.query-items beets query)
           no-exist (MPDException ACKError.NO_EXIST "no such file")]
       (if items
-        (let [playlist playback.playlist]
+        (with (playlist playback)
           (try
-            (ap-each items (.add-song playlist (get it "path")))
+            (ap-each items (.add playlist (get it "path")))
           (except [FileNotFoundError]
             (raise no-exist))))
         (raise no-exist)))))

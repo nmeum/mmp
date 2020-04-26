@@ -1,81 +1,56 @@
-(import [threading [Lock Semaphore Thread]]
-        [random [randrange]]
-        os)
+(import [random [randrange]] os)
 (require [hy.contrib.walk [let]])
 
 (defclass Playlist []
-  (defn --init-- [self]
-    (setv self.cur-index None)
-    (setv self.mode {
+  (setv mode {
       :repeat False :random False
       :single False :consume False
-    })
-    (setv self.mode-lock (Lock))
-    (setv self.list [])
-    (setv self.list-lock (Lock)))
+  })
+
+  (defn --init-- [self]
+    (setv self._current None)
+    (setv self._list []))
 
   (defn psize [self]
-    (with (self.list-lock)
-      (len self.list)))
+    (len self._list))
 
-  (defn set-mode [self &optional [repeat None] [random None]
-                                 [single None] [consume None]]
-    (let [h { :repeat repeat :random random
-              :single single :consume consume }]
-      (setv self.mode
-        (with (self.mode-lock)
-          (dict (map
-                  (fn [pair]
-                    (, (first pair)
-                       (if (is None (last pair))
-                         (get self.mode (first pair))
-                         (last pair))))
-                  (.items h)))))))
+  (defn current [self]
+    (if (is None self._current)
+      None
+      (get self._list self._current)))
 
-  (defn get-mode [self]
-    (with (self.mode-lock)
-      self.mode))
-
-  (defn get-position [self]
-    (with (self.list-lock)
-      self.cur-index))
-
-  (defn add-song [self path]
+  (defn add [self path]
     (if (not (os.path.isfile path))
       (raise (FileNotFoundError
                (.format "file '{}' does not exist" path)))
-      (with (self.list-lock)
-        (.append self.list path))))
+      (.append self._list path)))
 
-  (defn del-song [self path]
-    (with (self.list-lock)
-      (.remove self.list path)))
-
-  (defn select [self index]
-    (if (>= index (len self.list))
+  (defn get [self index]
+    (if (>= index (len self._list))
       (raise (IndexError "song position out of range"))
-      (setv self.cur-index index)))
+      (get self._list index)))
 
-  (defn next-song [self]
+  (defn remove [self path]
+    (.remove self._list path))
+
+  (defn next [self]
     (defn next-index [mode]
       ;; TODO: Handle repeat mode
-      (if (not self.list)
+      (if (not self._list)
         None
-        (if (is None self.cur-index)
+        (if (is None self._current)
           0
           (let [n (if (get mode :random)
-                      (randrange (len self.list))
-                      (inc self.cur-index))]
-            (if (>= n (len self.list))
+                      (randrange (len self._list))
+                      (inc self._current))]
+            (if (>= n (len self._list))
               (if (get mode :repeat) 0 None)
               n)))))
 
-    (let [m (with (self.mode-lock) self.mode)]
-      (with (self.list-lock)
-        (if (get m :consume)
-          (.pop self.cur-index))
-        (let [idx (next-index m)]
-          (setv self.cur-index idx)
-          (if (is None idx)
-            None
-            (get self.list idx)))))))
+    (if (get self.mode :consume)
+      (.pop self._current))
+    (let [idx (next-index self.mode)]
+      (setv self._current idx)
+      (if (is None idx)
+        None
+        (get self._list idx)))))

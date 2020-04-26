@@ -12,6 +12,10 @@
     "track"        "Track"
     "disc"         "Disc"
     "albumartist"  "AlbumArtist"
+    ;; TODO: length
+    ;; TODO: Pos
+    ;; TODO: Id
+    ;; TODO: Last-Modified
   })
 
 (defn beets->song [metadata]

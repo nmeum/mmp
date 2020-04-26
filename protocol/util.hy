@@ -14,6 +14,7 @@
     "disc"         "Disc"
     "albumartist"  "AlbumArtist"
     "id"           "Id"
+    ;; TODO: Time
     "length"       "duration"
     "mtime"        "Last-Modified"
     ;; TODO: Pos

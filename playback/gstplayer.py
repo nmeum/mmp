@@ -67,7 +67,6 @@ class GstPlayer(object):
         bus.add_signal_watch()
         bus.connect("message", self._handle_message)
 
-        self.path = None
         self.playing = False
         self.finished_callback = finished_callback
         self.cached_time = None
@@ -82,7 +81,6 @@ class GstPlayer(object):
         if message.type == Gst.MessageType.EOS:
             # file finished playing
             self.player.set_state(Gst.State.NULL)
-            self.path = None
             self.playing = False
             self.cached_time = None
             if self.finished_callback:
@@ -141,7 +139,6 @@ class GstPlayer(object):
     def stop(self):
         """Halt playback."""
         self.player.set_state(Gst.State.NULL)
-        self.path = None
         self.playing = False
         self.cached_time = None
 

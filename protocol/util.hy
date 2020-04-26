@@ -1,4 +1,5 @@
-(import [playback.playlist [Song]])
+(import [playback.playlist [Song]]
+  [datetime [datetime]])
 (require [hy.contrib.walk [let]]
          [hy.extra.anaphoric [*]])
 
@@ -14,14 +15,15 @@
     "albumartist"  "AlbumArtist"
     "id"           "Id"
     "length"       "duration"
+    "mtime"        "Last-Modified"
     ;; TODO: Pos
-    ;; TODO: Last-Modified
   })
 
 ;; Functions for converting a value of the given beets tag name to
 ;; the representation used by the corresponding MPD tag (see above).
 (setv conversion-funcs {
   "length" (fn [v] (round v 3))
+  "mtime"  (fn [v] (datetime.fromtimestamp (int v)))
 })
 
 (defn beets->song [metadata]

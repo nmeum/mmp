@@ -12,9 +12,9 @@
     "track"        "Track"
     "disc"         "Disc"
     "albumartist"  "AlbumArtist"
+    "id"           "Id"
     ;; TODO: length
     ;; TODO: Pos
-    ;; TODO: Id
     ;; TODO: Last-Modified
   })
 

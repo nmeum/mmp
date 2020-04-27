@@ -17,6 +17,7 @@
     ;; TODO: Time
     "length"       "duration"
     "mtime"        "Last-Modified"
+    "year"         "Date"
   })
 
 ;; Functions for converting a value of the given beets tag name to

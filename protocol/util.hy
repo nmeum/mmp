@@ -23,7 +23,7 @@
 ;; the representation used by the corresponding MPD tag (see above).
 (setv conversion-funcs {
   "length" (fn [v] (round v 3))
-  "mtime"  (fn [v] (datetime.fromtimestamp (int v)))
+  "mtime"  (fn [v] (.isoformat (datetime.fromtimestamp (int v)) "T"))
 })
 
 (defn beets->song [metadata]

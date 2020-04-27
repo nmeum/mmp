@@ -15,12 +15,12 @@
   (defn convert-song [self song]
     (self.dict->mpdstr
       {#**
-        (. song metadata)
-       #**
         {
           "file" (. song path)
           "Pos"  (. song position)
         }
+       #**
+        (. song metadata)
       }))
 
   (defn dict->mpdstr [self dict]

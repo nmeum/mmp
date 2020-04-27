@@ -13,6 +13,7 @@
 
   (defn dispatch-list [self list]
     (setv ok-list? (= list.name "command_list_ok_begin"))
+    ;; TODO: Response can be combined into a single packet
     (for [cmd list.args]
       (self.dispatch-single cmd)
       (if ok-list? (self.send-resp "list_OK"))))

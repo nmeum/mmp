@@ -17,7 +17,6 @@
     ;; TODO: Time
     "length"       "duration"
     "mtime"        "Last-Modified"
-    ;; TODO: Pos
   })
 
 ;; Functions for converting a value of the given beets tag name to

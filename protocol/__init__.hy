@@ -17,7 +17,10 @@
       {#**
         (. song metadata)
        #**
-        { "file" (. song path) }
+        {
+          "file" (. song path)
+          "Pos"  (. song position)
+        }
       }))
 
   (defn dict->mpdstr [self dict]

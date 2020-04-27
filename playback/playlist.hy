@@ -4,6 +4,7 @@
 (defclass Song []
   (setv path None)
   (setv metadata {})
+  (setv position 0)
 
   (defn --init-- [self path metadata]
     (if (not (os.path.isfile path))
@@ -23,6 +24,11 @@
     (setv self._current None)
     (setv self._list []))
 
+  (defn _get-song [self index]
+    (let [song (get self._list index)]
+      (setv song.position index)
+      song))
+
   (defn psize [self]
     (len self._list))
 
@@ -39,7 +45,7 @@
   (defn get [self index]
     (if (>= index (len self._list))
       (raise (IndexError "song position out of range"))
-      (get self._list index)))
+      (._get-song self index)))
 
   (defn remove [self path]
     (.remove self._list path))
@@ -65,4 +71,4 @@
       (setv self._current idx)
       (if (is None idx)
         None
-        (get self._list idx)))))
+        (._get-song self idx)))))

@@ -20,6 +20,7 @@ music player.
 import urllib.parse
 import _thread
 import time
+from threading import Event
 
 import gi
 gi.require_version('Gst', '1.0')
@@ -43,11 +44,8 @@ class GstPlayer(object):
     another is available on the queue, it is played automatically.
     """
 
-    def __init__(self, finished_callback=None):
+    def __init__(self):
         """Initialize a player.
-
-        If a finished_callback is provided, it is called every time a
-        track started with play_file finishes.
 
         Once the player has been created, call run() to begin the main
         runloop in a separate thread.
@@ -67,8 +65,7 @@ class GstPlayer(object):
         bus.add_signal_watch()
         bus.connect("message", self._handle_message)
 
-        self.playing = False
-        self.finished_callback = finished_callback
+        self._finished = Event() # set if playback finished
         self.cached_time = None
 
     def _get_state(self):
@@ -81,17 +78,16 @@ class GstPlayer(object):
         if message.type == Gst.MessageType.EOS:
             # file finished playing
             self.player.set_state(Gst.State.NULL)
-            self.playing = False
             self.cached_time = None
-            if self.finished_callback:
-                self.finished_callback()
+            self._finished.set()
 
         elif message.type == Gst.MessageType.ERROR:
             # error
             self.player.set_state(Gst.State.NULL)
+            self._finished.set()
             err, _ = message.parse_error()
             raise RuntimeError("GStreamer Error: {}".format(err))
-            self.playing = False
+
 
     def state(self):
         """Return current player state as a string."""
@@ -118,23 +114,23 @@ class GstPlayer(object):
         uri = 'file://' + urllib.parse.quote(path)
         self.player.set_property("uri", uri)
         self.player.set_state(Gst.State.PLAYING)
-        self.playing = True
+        self._finished.clear()
 
     def play(self):
         """If paused, resume playback."""
         if self._get_state() == Gst.State.PAUSED:
             self.player.set_state(Gst.State.PLAYING)
-            self.playing = True
+            self._finished.clear()
 
     def pause(self):
         """Pause playback."""
         self.player.set_state(Gst.State.PAUSED)
-        self.playing = False
+        self._finished.set()
 
     def stop(self):
         """Halt playback."""
         self.player.set_state(Gst.State.NULL)
-        self.playing = False
+        self._finished.set()
         self.cached_time = None
 
     def run(self):
@@ -176,7 +172,7 @@ class GstPlayer(object):
             # Stream not ready. For small gaps of time, for instance
             # after seeking, the time values are unavailable. For this
             # reason, we cache recent.
-            if self.playing and self.cached_time:
+            if (not self._finished.is_set()) and self.cached_time:
                 return self.cached_time
             else:
                 return (0, 0)
@@ -197,5 +193,4 @@ class GstPlayer(object):
 
     def block(self):
         """Block until playing finishes."""
-        while self.playing:
-            time.sleep(1)
+        self._finished.wait()

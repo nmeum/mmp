@@ -12,7 +12,7 @@
       (if items
         (with (playlist playback)
           (try
-            (ap-each items (.add playlist (util.beets->song it)))
+            (ap-each items (.add playlist (util.create-song it)))
           (except [FileNotFoundError]
             (raise no-exist))))
         (raise no-exist)))))

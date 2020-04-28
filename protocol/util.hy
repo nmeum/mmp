@@ -27,7 +27,7 @@
   "mtime"  (fn [v] (.isoformat (datetime.fromtimestamp (int v)) "T"))
 })
 
-(defn beets->song [metadata]
+(defn create-song [metadata]
   (defn convert-meta [metadata]
     (defn is-unset [value]
       (try

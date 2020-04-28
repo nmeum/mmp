@@ -10,8 +10,8 @@
     (setv self._playlist (Playlist))
     (setv self._playlist-lock (Lock))
 
-    (setv self._play-start (BoundedSemaphore 1))
-    (.acquire self._play-start)
+    (setv self._play-start (Event))
+    (setv self._player-ready (Event))
 
     (.run self._player)
     (setv self._thread (Thread :target self._playback
@@ -20,13 +20,12 @@
 
   (defn _playback [self]
     (while True
-      (.acquire self._play-start)
-      (if (= (.state self) "pause")
-        (with (self._player-lock)
-          (.play self._player))
-        (let [song (with (p self) (.next p))]
-          (if (is None song)
-            (.acquire self._play-start))
+      (.wait self._play-start)
+      (let [song (with (p self) (.next p))]
+        (if (is None song)
+          (do
+            (.wait self._player-ready)
+            (.clear self._player-ready))
           (with (self._player-lock)
             (.play-file self._player (. song path)))))
       (.block self._player)))
@@ -43,20 +42,20 @@
   ;; In general: How should intertwined state changes be handled?
 
   (defn play [self &optional index]
-    (if (not (is None index))
-      (let [song (with (p self) (.get p index))]
-        (with (self._player-lock)
-          (.stop self)
-          (.set-file self._player (. song path)))))
-    (try
-      (.release self._play-start)
-      (except [ValueError])))
+    (when (not (is None index))
+      (.stop self)
+      (with (playlist self)
+        (.nextup playlist index))
+       (.set self._player-ready))
+    (.set self._play-start))
 
   (defn pause [self]
+    (.clear self._play-start)
     (with (self._player-lock)
       (.pause self._player)))
 
   (defn stop [self]
+    (.clear self._play-start)
     (with (self._player-lock)
       (.stop self._player)))
 

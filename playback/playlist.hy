@@ -22,6 +22,7 @@
 
   (defn --init-- [self]
     (setv self._current None)
+    (setv self._next None)
     (setv self._list []))
 
   (defn _get-song [self index]
@@ -50,6 +51,9 @@
   (defn remove [self path]
     (.remove self._list path))
 
+  (defn nextup [self index]
+    (setv self._next index))
+
   (defn next [self]
     (defn next-index [mode]
       ;; TODO: Handle repeat mode
@@ -67,7 +71,10 @@
 
     (if (get self.mode :consume)
       (.pop self._current))
-    (let [idx (next-index self.mode)]
+    (let [idx (if (is None self._next)
+                  (next-index self.mode)
+                  (. self _next))]
+      (setv self._next None)
       (setv self._current idx)
       (if (is None idx)
         None

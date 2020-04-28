@@ -2,7 +2,7 @@
   [mpd.server [Server]]
   [protocol [control commands queue status]]
   [playback.playback [Playback]]
-  [beets.client [Client]])
+  [beetsapi.client [Client]])
 (require [hy.contrib.walk [let]])
 
 ;; The socketserver needs to be closed from a different thread. This

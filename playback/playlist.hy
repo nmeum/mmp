@@ -44,9 +44,7 @@
       (raise (TypeError "not an instance of Song"))))
 
   (defn get [self index]
-    (if (>= index (len self._list))
-      (raise (IndexError "song position out of range"))
-      (._get-song self index)))
+    (._get-song self index))
 
   (defn remove [self path]
     (.remove self._list path))

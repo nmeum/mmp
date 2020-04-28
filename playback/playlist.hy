@@ -52,7 +52,9 @@
     (.remove self._list path))
 
   (defn nextup [self index]
-    (setv self._next index))
+    (if (>= index (len self._list))
+      (raise (IndexError "song position out of range"))
+      (setv self._next index)))
 
   (defn next [self]
     (defn next-index [mode]

@@ -1,6 +1,6 @@
 (import argparse mpd threading signal
   [mpd.server [Server]]
-  [protocol [control commands queue status]]
+  [protocol [control commands playback queue status]]
   [playback.playback [Playback]]
   [beetsapi.client [Client]])
 (require [hy.contrib.walk [let]])

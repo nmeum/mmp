@@ -1,0 +1,14 @@
+plugins: web
+
+library: @MMP_TEST_DIRECTORY@/beets.db
+directory: @MMP_MUISC_DIRECTORY@
+
+import:
+  write: no
+  copy: yes
+  move: no
+
+web:
+  host: 127.0.0.1
+  port: 8080
+  include_paths: True

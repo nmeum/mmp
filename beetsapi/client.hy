@@ -6,7 +6,7 @@
 (require [hy.contrib.walk [let]])
 
 (defclass Client []
-  (defn --init-- [self url]
+  (defn __init__ [self url]
     (setv self.base-url url)
     (setv self.headers {
       "Content-Type" "application/json"

@@ -2,7 +2,7 @@
 (require [hy.contrib.walk [let]])
 
 (defclass Reader [object]
-  (defn --init-- [self file]
+  (defn __init__ [self file]
     (setv self.file file))
 
   (defn list-start? [self line]
@@ -12,7 +12,7 @@
   (defn list-end? [self line]
     (= line "command_list_end\n"))
 
-  (defn --call-- [self]
+  (defn __call__ [self]
     (loop [[str ""] [list False]]
       (let [line (self.file.readline)]
         (cond

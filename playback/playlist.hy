@@ -6,7 +6,7 @@
   (setv metadata {})
   (setv position 0)
 
-  (defn --init-- [self path metadata]
+  (defn __init__ [self path metadata]
     (if (not (os.path.isfile path))
       (raise (FileNotFoundError
                (.format "file '{}' does not exist" path))))
@@ -20,7 +20,7 @@
       :single False :consume False
   })
 
-  (defn --init-- [self]
+  (defn __init__ [self]
     (setv self._current None)
     (setv self._next None)
     (setv self._list []))

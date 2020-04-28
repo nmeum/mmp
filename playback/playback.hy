@@ -4,7 +4,7 @@
 (require [hy.contrib.walk [let]])
 
 (defclass Playback []
-  (defn --init-- [self]
+  (defn __init__ [self]
     (setv self._player (GstPlayer))
     (setv self._player-lock (RLock))
     (setv self._playlist (Playlist))
@@ -59,12 +59,12 @@
     (with (self._player-lock)
       (.stop self._player)))
 
-  (defn --enter-- [self]
+  (defn __enter__ [self]
     """Context manager for aquiring access to the underlying playlist.
        All code executed in the context manager will be executed atomic
        on the playlist object, i.e. the song won't be changed in between."""
     (.acquire self._playlist-lock)
     self._playlist)
 
-  (defn --exit-- [self type value traceback]
+  (defn __exit__ [self type value traceback]
     (.release self._playlist-lock)))

@@ -8,12 +8,12 @@
 ;; The socketserver needs to be closed from a different thread. This
 ;; thread blocks until a signal is received then closes the server.
 (defclass CleanupThread [threading.Thread]
-  (defn --init-- [self socket-server]
+  (defn __init__ [self socket-server]
     (setv self.server socket-server)
     (setv self.lock (threading.Semaphore 0))
     (signal.signal signal.SIGINT
       (fn [signal frame] (self.lock.release)))
-    (.--init-- threading.Thread self))
+    (.__init__ threading.Thread self))
 
   (defn run [self]
     (self.lock.acquire)

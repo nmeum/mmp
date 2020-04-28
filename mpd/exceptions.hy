@@ -16,7 +16,7 @@
   (setv EXIST 56))
 
 (defclass MPDException [Exception]
-  (defn --init-- [self code msg &optional [lst-num 0] [cur-cmd ""]]
+  (defn __init__ [self code msg &optional [lst-num 0] [cur-cmd ""]]
     (if (not (isinstance code ACKError))
       (raise (TypeError "Exception code must be an ACKError")))
     (setv self.code code)

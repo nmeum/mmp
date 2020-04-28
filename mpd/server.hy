@@ -39,7 +39,7 @@
         (self.dispatch input)))))
 
 (defclass Server [socketserver.ThreadingTCPServer]
-  (defn --init-- [self addr callable]
-    (.--init-- socketserver.ThreadingTCPServer self addr Handler)
+  (defn __init__ [self addr callable]
+    (.__init__ socketserver.ThreadingTCPServer self addr Handler)
     (setv self.daemon_threads True)
     (setv self.callable callable)))

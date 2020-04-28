@@ -7,7 +7,7 @@
 (setv freecmd libmpdserver.mpd_free_command)
 
 (defclass Range [object]
-  (defn --init-- [self start &optional end]
+  (defn __init__ [self start &optional end]
     (setv self.start start)
     (setv self.end end))
 
@@ -20,7 +20,7 @@
       (range self.start self.end))))
 
 (defclass Command [object]
-  (defn --init-- [self cmd]
+  (defn __init__ [self cmd]
     (setv self.name (.decode cmd.name))
     (let [args (self.argv-list cmd.argc cmd.argv)]
       (setv self.args (list (map self.convert-argument args)))))

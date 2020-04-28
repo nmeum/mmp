@@ -3,7 +3,7 @@
 (require [hy.contrib.walk [let]])
 
 (defclass Commands [object]
-  (defn --init-- [self]
+  (defn __init__ [self]
     (setv self.handlers {}))
 
   (defn _serialize-dict [self dict]

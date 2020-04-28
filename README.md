@@ -68,6 +68,12 @@ Finally, invoke mmp itself using:
 	$ export LD_LIBRARY_PATH="<PATH TO LIBMPDSERVER REPOSITORY>"
 	$ hy mmp.hy "<URL OF BEETS WEB PLUGIN>"
 
+## Tests
+
+If [mpc][mpc homepage] is installed test can be invoked using:
+
+	$ ./tests/run_tests.sh
+
 ## License
 
 This program is free software: you can redistribute it and/or modify it
@@ -94,3 +100,4 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
 [mpvd github]: https://github.com/nmeum/mpvd
 [mpv homepage]: https://mpv.io/
 [mpv protocol]: https://mpv.io/manual/master/#json-ipc
+[mpc homepage]: https://www.musicpd.org/clients/mpc/

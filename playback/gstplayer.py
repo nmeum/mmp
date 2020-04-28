@@ -109,19 +109,14 @@ class GstPlayer(object):
 
         raise RuntimeError("invalid player state")
 
-    def set_file(self, path):
-        """Change the current file without playing it."""
-        self.player.set_state(Gst.State.NULL)
-
-        self.path = path
-        uri = 'file://' + urllib.parse.quote(path)
-        self.player.set_property("uri", uri)
-
     def play_file(self, path):
         """Immediately begin playing the audio file at the given
         path.
         """
-        self.set_file(path)
+        self.player.set_state(Gst.State.NULL)
+
+        uri = 'file://' + urllib.parse.quote(path)
+        self.player.set_property("uri", uri)
         self.player.set_state(Gst.State.PLAYING)
         self.playing = True
 

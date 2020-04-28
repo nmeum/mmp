@@ -8,7 +8,7 @@
     (self.request.sendall (.encode (+ (str resp) mpd.DELIMITER))))
 
   (defn dispatch-single [self cmd]
-    (let [resp (self.server.callable cmd)]
+    (let [resp (self.server.handler cmd)]
       (if resp (self.send-resp resp))))
 
   (defn dispatch-list [self list]
@@ -39,7 +39,7 @@
         (self.dispatch input)))))
 
 (defclass Server [socketserver.ThreadingTCPServer]
-  (defn __init__ [self addr callable]
+  (defn __init__ [self addr handler]
     (.__init__ socketserver.ThreadingTCPServer self addr Handler)
     (setv self.daemon_threads True)
-    (setv self.callable callable)))
+    (setv self.handler handler)))

@@ -16,3 +16,7 @@
           (except [FileNotFoundError]
             (raise no-exist))))
         (raise no-exist)))))
+
+(with-decorator (commands.add "playlistinfo")
+  (defn playlist-info [ctx args]
+    ctx.playback))

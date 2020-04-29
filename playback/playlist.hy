@@ -25,6 +25,9 @@
     (setv self._next None)
     (setv self._list []))
 
+  (defn __iter__ [self]
+    (iter self._list))
+
   (defn _get-song [self index]
     (let [song (get self._list index)]
       (setv song.position index)

@@ -1,4 +1,5 @@
 (import mpd
+  [playback.playback [Playback]]
   [playback.playlist [Song]])
 (require [hy.contrib.walk [let]])
 
@@ -36,6 +37,12 @@
         (. song metadata)
       }))
 
+  (defn _serialize-playback [self playback]
+    (with (playlist playback)
+      (reduce (fn [string song]
+                (+ string (._serialize-song self song)))
+              playlist "")))
+
   (defn _serialize [self value]
     (cond
       [(isinstance value dict)
@@ -44,6 +51,8 @@
         (._serialize-list self value)]
       [(isinstance value Song)
         (._serialize-song self value)]
+      [(isinstance value Playback)
+        (._serialize-playback self value)]
       [True value]))
 
   (defn add [self name]

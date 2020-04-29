@@ -30,7 +30,7 @@
         (. song metadata)
       }))
 
-  (defn serialize [self value]
+  (defn _serialize [self value]
     (cond
       [(isinstance value dict)
         (._serialize-dict self value)]
@@ -50,7 +50,7 @@
     (if (in cmd.name self.handlers)
       (let [handler (get self.handlers cmd.name)
             resp    (handler playback beets cmd.args)]
-        (.serialize self resp))
+        (._serialize self resp))
       (raise (NotImplementedError (% "%s has not ben implemented" cmd.name))))))
 
 (setv commands (Commands))

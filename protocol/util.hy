@@ -34,10 +34,10 @@
         (or (is None value) (= (len value) 0))
         (except [TypeError] False)))
 
-  (defn convert-value [tag value]
-    (try
-      ((get conversion-funcs tag) value)
-      (except [KeyError] value)))
+    (defn convert-value [tag value]
+      (try
+        ((get conversion-funcs tag) value)
+        (except [KeyError] value)))
 
     (reduce (fn [dict pair]
               (if (and (in (first pair) MPD-TAG-NAMES)

@@ -19,8 +19,16 @@
     (self.lock.acquire)
     (self.server.shutdown)))
 
+(defclass ConnHandler []
+  (defn __init__ [self playback beets]
+    (setv self.playback playback)
+    (setv self.beets beets))
+
+  (defn __call__ [self cmd]
+    (.handle commands self.playback self.beets cmd)))
+
 (defn start-server [addr port playback beets]
-  (let [handler  (fn [cmd] (commands.handle playback beets cmd))]
+  (let [handler (ConnHandler playback beets)]
     (with [server (Server (, addr port) handler)]
       (.start (CleanupThread server))
       (server.serve-forever))))

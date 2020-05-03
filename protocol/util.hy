@@ -6,19 +6,19 @@
 ;; Mapping of beets tag names to MPD tag names.
 ;; See: src/tag/Names.c in MPD source.
 (setv MPD-TAG-NAMES {
-    "title"        "Title"
-    "artist"       "Artist"
-    "album"        "Album"
-    "genre"        "Genre"
-    "track"        "Track"
-    "disc"         "Disc"
-    "albumartist"  "AlbumArtist"
-    "id"           "Id"
-    ;; TODO: Time
-    "length"       "duration"
-    "mtime"        "Last-Modified"
-    "year"         "Date"
-  })
+  "title"        "Title"
+  "artist"       "Artist"
+  "album"        "Album"
+  "genre"        "Genre"
+  "track"        "Track"
+  "disc"         "Disc"
+  "albumartist"  "AlbumArtist"
+  "id"           "Id"
+  ;; TODO: Time
+  "length"       "duration"
+  "mtime"        "Last-Modified"
+  "year"         "Date"
+})
 
 ;; Functions for converting a value of the given beets tag name to
 ;; the representation used by the corresponding MPD tag (see above).

@@ -6,7 +6,7 @@
   (defn __init__ [self]
     (setv self.handlers {}))
 
-  (defn _serialize-dict [self dict]
+  (defn _serialize-dict [self dict &optional exclude]
     (defn _serialize-values [dict]
       (dfor (, key value) (.items dict)
         [key (if (isinstance value bool)
@@ -14,9 +14,12 @@
                value)]))
 
     (.rstrip (reduce (fn [rest pair]
-                       (+ rest
-                          (.format "{}: {}" (first pair) (last pair))
-                          mpd.DELIMITER))
+                       (if (and (not (is None exclude))
+                                (in (first pair) exclude))
+                         rest
+                         (+ rest
+                            (.format "{}: {}" (first pair) (last pair))
+                            mpd.DELIMITER)))
                       (.items (_serialize-values dict)) "") mpd.DELIMITER))
 
   (defn _serialize-song [self song]

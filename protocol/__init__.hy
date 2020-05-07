@@ -22,6 +22,9 @@
                             mpd.DELIMITER)))
                       (.items (_serialize-values dict)) "") mpd.DELIMITER))
 
+  (defn _serialize-list [self list]
+    (.join mpd.DELIMITER list))
+
   (defn _serialize-song [self song]
     (._serialize-dict self
       {#**
@@ -37,6 +40,8 @@
     (cond
       [(isinstance value dict)
         (._serialize-dict self value)]
+      [(isinstance value list)
+        (._serialize-list self value)]
       [(isinstance value Song)
         (._serialize-song self value)]
       [True value]))

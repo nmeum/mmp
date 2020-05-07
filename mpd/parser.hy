@@ -49,7 +49,7 @@
          (Command v.cmdval.contents)]
         [(= t MPDVal.EXPR)
          (raise (NotImplementedError "Expression not implemented yet"))]
-        [True (raise (TypeError (+ "unknown type " (string t))))]))))
+        [True (raise (TypeError (+ "unknown type " (str t))))]))))
 
 (defn parse-command [string]
   (setv inptr (ctypes.c_char_p))

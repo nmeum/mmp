@@ -22,7 +22,9 @@
             tags)))
 
 (defn enable-tagtypes [ctx tags]
-  (ap-each tags (.remove (. ctx disabled-tags) it)))
+  (ap-each tags
+    (if (in it (. ctx disabled-tags))
+      (.remove (. ctx disabled-tags) it))))
 
 (defn clear-tagtypes [ctx]
   (ctx.disabled-tags.extend

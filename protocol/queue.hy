@@ -17,6 +17,7 @@
             (raise no-exist))))
         (raise no-exist)))))
 
+;; TODO: Respect optional song position argument.
 (with-decorator (commands.add "playlistinfo")
   (defn playlist-info [ctx args]
     ctx.playback))

@@ -20,6 +20,10 @@
   "year"         "Date"
 })
 
+;; Metadata not actually considered tags by MPD itself.
+(setv MPD-BASIC-TAGS
+  ["file" "Last-Modified" "Time" "duration" "Pos" "Id"])
+
 ;; Functions for converting a value of the given beets tag name to
 ;; the representation used by the corresponding MPD tag (see above).
 (setv conversion-funcs {

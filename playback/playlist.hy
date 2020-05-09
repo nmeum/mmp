@@ -49,8 +49,11 @@
   (defn get [self index]
     (._get-song self index))
 
-  (defn remove [self path]
-    (.remove self._list path))
+  (defn remove [self range]
+    (let [start (. range start) stop (. range stop)]
+      (if (= start stop)
+        (.pop self._list start)
+        (setv self._list (cut self._list start stop)))))
 
   (defn nextup [self index]
     (if (>= index (len self._list))

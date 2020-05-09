@@ -14,9 +14,9 @@
   (defn infinite? [self]
     (not self.end))
 
-  (defn to-range [self]
-    (if (self.infinite?)
-      (raise (ValueError "Range has infinite length"))
+  (defn to-range [self &optional max]
+    (if (and (self.infinite?) (is None max))
+      (raise (ValueError "Range has infinite length and no maximum supplied"))
       (range self.start self.end))))
 
 (defclass Command [object]

@@ -1,7 +1,8 @@
 (import mpd
         [protocol [commands]]
         [protocol.util :as util])
-(require [hy.contrib.walk [let]])
+(require [hy.contrib.walk [let]]
+         [hy.extra.anaphoric [*]])
 
 (defn list-tagtypes [ctx]
   (reduce (fn [lst key]
@@ -18,6 +19,9 @@
                    (not (in tag ctx.disabled-tags))))
             tags)))
 
+(defn enable-tagtypes [ctx tags]
+  (ap-each tags (.remove (. ctx disabled-tags) it)))
+
 (with-decorator (commands.add "tagtypes")
   (defn tagtypes [ctx args]
     (if (not args)
@@ -25,4 +29,6 @@
       (cond
         [(= "disable" (first args))
          (disable-tagtypes ctx (list (rest args)))]
+        [(= "enable" (first args))
+         (enable-tagtypes ctx (list (rest args)))]
         [True (raise NotImplementedError)]))))

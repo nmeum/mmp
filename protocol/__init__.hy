@@ -26,7 +26,7 @@
   (defn _serialize-list [self list]
     (.join mpd.DELIMITER list))
 
-  (defn _serialize-song [self song]
+  (defn _serialize-song [self song filter]
     (._serialize-dict self
       {#**
         {
@@ -35,24 +35,24 @@
         }
        #**
         (. song metadata)
-      }))
+      } filter))
 
-  (defn _serialize-playback [self playback]
+  (defn _serialize-playback [self playback filter]
     (with (playlist playback)
       (reduce (fn [string song]
-                (+ string (._serialize-song self song)))
+                (+ string (._serialize-song self song filter)))
               playlist "")))
 
-  (defn _serialize [self value]
+  (defn _serialize [self ctx value]
     (cond
       [(isinstance value dict)
         (._serialize-dict self value)]
       [(isinstance value list)
         (._serialize-list self value)]
       [(isinstance value Song)
-        (._serialize-song self value)]
+        (._serialize-song self value ctx.disabled-tags)]
       [(isinstance value Playback)
-        (._serialize-playback self value)]
+        (._serialize-playback self value ctx.disabled-tags)]
       [True value]))
 
   (defn add [self name]
@@ -67,7 +67,7 @@
     (if (in cmd.name self.handlers)
       (let [handler (get self.handlers cmd.name)
             resp    (handler ctx cmd.args)]
-        (._serialize self resp))
+        (._serialize self ctx resp))
       (raise (NotImplementedError (% "%s has not ben implemented" cmd.name))))))
 
 (setv commands (Commands))

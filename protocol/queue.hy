@@ -17,6 +17,14 @@
             (raise no-exist))))
         (raise no-exist)))))
 
+(with-decorator (commands.add "delete")
+  (defn delete [ctx args]
+    (with (playlist ctx.playback)
+      (try
+        (.remove playlist (.to-range (first args) (.psize playlist)))
+        (except [IndexError]
+          (raise (MPDException ACKError.ARG "Bad song index")))))))
+
 ;; TODO: Respect optional song position argument.
 (with-decorator (commands.add "playlistinfo")
   (defn playlist-info [ctx args]

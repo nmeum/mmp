@@ -4,6 +4,8 @@
 (require [hy.contrib.walk [let]]
          [hy.extra.anaphoric [*]])
 
+;; TODO: tagtypes code could use sets instead of lists.
+
 (defn list-tagtypes [ctx]
   (reduce (fn [lst key]
             (if (and (not (in key util.MPD-BASIC-TAGS))
@@ -22,6 +24,11 @@
 (defn enable-tagtypes [ctx tags]
   (ap-each tags (.remove (. ctx disabled-tags) it)))
 
+(defn clear-tagtypes [ctx]
+  (ctx.disabled-tags.extend
+    (filter (fn [tag] (not (in tag util.MPD-BASIC-TAGS)))
+            (.values util.MPD-TAG-NAMES))))
+
 (with-decorator (commands.add "tagtypes")
   (defn tagtypes [ctx args]
     (if (not args)
@@ -31,4 +38,6 @@
          (disable-tagtypes ctx (list (rest args)))]
         [(= "enable" (first args))
          (enable-tagtypes ctx (list (rest args)))]
+        [(= "clear" (first args))
+         (clear-tagtypes ctx)]
         [True (raise NotImplementedError)]))))

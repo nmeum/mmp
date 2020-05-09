@@ -5,12 +5,12 @@
   [hy.contrib.walk [let]])
 
 (with-decorator (commands.add "add")
-  (defn add [playback beets args]
+  (defn add [ctx args]
     (let [path     (first args)
-          items    (.query-path beets path)
+          items    (.query-path ctx.beets path)
           no-exist (MPDException ACKError.NO_EXIST "no such file")]
       (if items
-        (with (playlist playback)
+        (with (playlist ctx.playback)
           (try
             (ap-each items (.add playlist (util.create-song it)))
           (except [FileNotFoundError]

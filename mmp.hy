@@ -25,7 +25,7 @@
     (setv self.beets beets))
 
   (defn __call__ [self cmd]
-    (.handle commands self.playback self.beets cmd)))
+    (.handle commands self cmd)))
 
 (defn start-server [addr port playback beets]
   (let [handler (ConnHandler playback beets)]

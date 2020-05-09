@@ -49,10 +49,10 @@
           (assoc self.handlers name func)
           func))))
 
-  (defn handle [self playback beets cmd]
+  (defn handle [self ctx cmd]
     (if (in cmd.name self.handlers)
       (let [handler (get self.handlers cmd.name)
-            resp    (handler playback beets cmd.args)]
+            resp    (handler ctx cmd.args)]
         (._serialize self resp))
       (raise (NotImplementedError (% "%s has not ben implemented" cmd.name))))))
 

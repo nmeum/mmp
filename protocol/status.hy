@@ -3,13 +3,13 @@
 (require [hy.contrib.walk [let]])
 
 (with-decorator (commands.add "currentsong")
-  (defn current-song [playback beets args]
-    (with (playlist playback)
+  (defn current-song [ctx args]
+    (with (playlist ctx.playback)
       (.current playlist))))
 
 (with-decorator (commands.add "status")
-  (defn status [playback beets args]
-    (with (playlist playback)
+  (defn status [ctx args]
+    (with (playlist ctx.playback)
       (let [mode (. playlist mode)
             song (.current playlist)]
         {#**
@@ -20,7 +20,7 @@
             "single"         (get mode :single)
             "consume"        (get mode :consume)
             "playlistlength" (playlist.psize)
-            "state"          (playback.state)
+            "state"          (ctx.playback.state)
           }
          #**
           (if song

@@ -3,7 +3,7 @@
 (require [hy.contrib.walk [let]])
 
 (with-decorator (commands.add "repeat")
-  (defn repeat [playback beets args]
-    (with (playlist playback)
+  (defn repeat [ctx args]
+    (with (playlist ctx.playback)
       (assoc (. playlist mode) :repeat (first args))
       None)))

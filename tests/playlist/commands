@@ -1,0 +1,4 @@
+mpc add "${MUSICDIR}/"
+mpc add "${MUSICDIR}/"
+mpc add "${MUSICDIR}/"
+mpc playlist

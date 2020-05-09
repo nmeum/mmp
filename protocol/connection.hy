@@ -29,6 +29,9 @@
     (filter (fn [tag] (not (in tag util.MPD-BASIC-TAGS)))
             (.values util.MPD-TAG-NAMES))))
 
+(defn all-tagtypes [ctx]
+  (.clear ctx.disabled-tags))
+
 (with-decorator (commands.add "tagtypes")
   (defn tagtypes [ctx args]
     (if (not args)
@@ -40,4 +43,6 @@
          (enable-tagtypes ctx (list (rest args)))]
         [(= "clear" (first args))
          (clear-tagtypes ctx)]
+        [(= "all" (first args))
+         (all-tagtypes ctx)]
         [True (raise NotImplementedError)]))))

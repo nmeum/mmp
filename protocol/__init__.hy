@@ -39,9 +39,10 @@
 
   (defn _serialize-playback [self playback filter]
     (with (playlist playback)
-      (reduce (fn [string song]
-                (+ string (._serialize-song self song filter)))
-              playlist "")))
+      (._serialize-list self
+                        (map (fn [song]
+                               (._serialize-song self song filter))
+                             playlist))))
 
   (defn _serialize [self ctx value]
     (cond

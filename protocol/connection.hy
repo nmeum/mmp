@@ -3,10 +3,26 @@
         [protocol.util :as util])
 (require [hy.contrib.walk [let]])
 
+(defn list-tagtypes [ctx]
+  (reduce (fn [lst key]
+            (if (and (not (in key util.MPD-BASIC-TAGS))
+                     (not (in key ctx.disabled-tags)))
+              (.append lst (.format "tagtype: {}" key)))
+            lst)
+          (.values util.MPD-TAG-NAMES) []))
+
+(defn disable-tagtypes [ctx tags]
+  (ctx.disabled-tags.extend
+    (filter (fn [tag]
+              (and (not (in tag util.MPD-BASIC-TAGS))
+                   (not (in tag ctx.disabled-tags))))
+            tags)))
+
 (with-decorator (commands.add "tagtypes")
   (defn tagtypes [ctx args]
-    (reduce (fn [lst key]
-              (if (not (in key util.MPD-BASIC-TAGS))
-                (.append lst (.format "tagtype: {}" key)))
-              lst)
-            (.values util.MPD-TAG-NAMES) [])))
+    (if (not args)
+      (list-tagtypes ctx)
+      (cond
+        [(= "disable" (first args))
+         (disable-tagtypes ctx (list (rest args)))]
+        [True (raise NotImplementedError)]))))

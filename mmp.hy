@@ -21,6 +21,7 @@
 
 (defclass ConnHandler []
   (defn __init__ [self playback beets]
+    (setv self.disabled-tags [])
     (setv self.playback playback)
     (setv self.beets beets))
 

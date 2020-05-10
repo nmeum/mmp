@@ -4,7 +4,7 @@
   [hy.contrib.walk [let]])
 
 (with-decorator (commands.add "play")
-  (defn add [ctx args]
+  (defn play [ctx args]
     (if args
       (try
         (ctx.playback.play (first args))

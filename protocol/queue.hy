@@ -17,6 +17,8 @@
             (raise no-exist))))
         (raise no-exist)))))
 
+;; TODO: Handle case where the delete song is the current song (requires
+;; player to skip to the next song in the playlist or stop if none).
 (with-decorator (commands.add "delete")
   (defn delete [ctx args]
     (with (playlist ctx.playback)

@@ -51,7 +51,7 @@
 
   (defn remove [self range]
     (let [start (. range start) stop (. range stop)]
-      (if (= start stop)
+      (if (= (len range) 1)
         (.pop self._list start)
         (setv self._list (cut self._list start stop)))))
 

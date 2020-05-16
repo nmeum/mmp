@@ -11,13 +11,18 @@
     (setv self.start start)
     (setv self.end end))
 
+  (defn single? [self]
+    (= self.start self.end))
+
   (defn infinite? [self]
     (not self.end))
 
   (defn to-range [self &optional max]
-    (if (and (self.infinite?) (is None max))
-      (raise (ValueError "Range has infinite length and no maximum supplied"))
-      (range self.start self.end))))
+    (if (.single? self)
+      (range self.start (inc self.end))
+      (if (and (self.infinite?) (is None max))
+        (raise (ValueError "Range has infinite length and no maximum supplied"))
+        (range self.start self.end)))))
 
 (defclass Command [object]
   (defn __init__ [self cmd]

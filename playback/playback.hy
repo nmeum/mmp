@@ -48,6 +48,13 @@
     (with (self._player-lock)
       (.stop self._player)))
 
+  (defn next [self]
+    (with (playlist self)
+      (let [song (.next playlist)]
+        (if (is None song)
+          (.stop self)
+          (.play-file self._player (. song path))))))
+
   (defn __enter__ [self]
     """Context manager for aquiring access to the underlying playlist.
        All code executed in the context manager will be executed atomic

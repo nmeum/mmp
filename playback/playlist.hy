@@ -55,6 +55,10 @@
         (.pop self._list start)
         (setv self._list (cut self._list start stop)))))
 
+  (defn reset [self]
+    (setv self._current None)
+    (setv self._next None))
+
   (defn nextup [self index]
     (if (>= index (len self._list))
       (raise (IndexError "song position out of range"))

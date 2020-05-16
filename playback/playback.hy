@@ -57,6 +57,8 @@
           (.stop self)
           (.play-file self._player (. song path))))))
 
+  ;; TODO: Implement prev
+
   (defn __enter__ [self]
     """Context manager for aquiring access to the underlying playlist.
        All code executed in the context manager will be executed atomic

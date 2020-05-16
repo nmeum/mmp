@@ -20,7 +20,7 @@ music player.
 import urllib.parse
 import _thread
 import time
-from threading import Event
+from threading import Event, Lock
 
 import gi
 gi.require_version('Gst', '1.0')
@@ -65,8 +65,15 @@ class GstPlayer(object):
         bus.add_signal_watch()
         bus.connect("message", self._handle_message)
 
+        self._callback_lock = Lock()
+        self._finisked_callback = None
         self._finished = Event() # set if playback finished
         self.cached_time = None
+
+    def set_callback(fn):
+        self._callback_lock.acquire()
+        self._finisked_callback = fn
+        self._callback_lock.release()
 
     def _get_state(self):
         """Returns the current state flag of the playbin."""
@@ -80,6 +87,11 @@ class GstPlayer(object):
             self.player.set_state(Gst.State.NULL)
             self.cached_time = None
             self._finished.set()
+
+            self._callback_lock.acquire()
+            if self._finisked_callback:
+                self._finisked_callback()
+            self._callback_lock.release()
 
         elif message.type == Gst.MessageType.ERROR:
             # error

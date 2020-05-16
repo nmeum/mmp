@@ -3,6 +3,10 @@
 (require [hy.extra.anaphoric [*]]
   [hy.contrib.walk [let]])
 
+(with-decorator (commands.add "next")
+  (defn next [ctx args]
+    (.next (. ctx playback))))
+
 (with-decorator (commands.add "pause")
   (defn pause [ctx args]
     (if args

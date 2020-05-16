@@ -20,6 +20,14 @@
         [(= state "pause") "pause"]
         [True "stop"])))
 
+  (defn time [self]
+    (with (self._player-lock)
+      (let [t (.time self._player)]
+        (if (= t (, 0 0))
+          None
+          (, (round (first t) 3)
+             (round (last t) 3))))))
+
   ;; TODO: Make methods block until state actually changed
 
   (defn play [self &optional index]

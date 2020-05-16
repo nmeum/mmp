@@ -66,7 +66,7 @@
 
   (defn next [self]
     (defn next-index [mode]
-      ;; TODO: Handle repeat mode
+      ;; TODO: Handle single mode
       ;; XXX: Maybe use threading macro (->)
       (if (not self._list)
         None

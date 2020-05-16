@@ -8,7 +8,7 @@
     (setv self._player (GstPlayer))
     (setv self._player-lock (RLock))
     (setv self._playlist (Playlist))
-    (setv self._playlist-lock (Lock))
+    (setv self._playlist-lock (RLock))
 
     (.run self._player))
 

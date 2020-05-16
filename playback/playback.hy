@@ -43,6 +43,8 @@
 
   (defn stop [self]
     (.clear_callback self._player)
+    (with (playlist self)
+      (.reset playlist))
     (with (self._player-lock)
       (.stop self._player)))
 

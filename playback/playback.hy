@@ -59,6 +59,14 @@
 
   ;; TODO: Implement prev
 
+  (defn remove [self range]
+    (with (playlist self)
+      (let [song (.current playlist)]
+        (if (and (not (is None song))
+                 (in (. song position) range))
+            (.next self)))
+      (.remove playlist range)))
+
   (defn __enter__ [self]
     """Context manager for aquiring access to the underlying playlist.
        All code executed in the context manager will be executed atomic

@@ -1,0 +1,5 @@
+mpc -q add "${MUSICDIR}/"
+mpc -q repeat on
+mpc -q play
+mpc del 0
+mpc

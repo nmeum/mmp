@@ -70,7 +70,10 @@ class GstPlayer(object):
         self._finished = Event() # set if playback finished
         self.cached_time = None
 
-    def set_callback(fn):
+    def clear_callback(self):
+        self.set_callback(None)
+
+    def set_callback(self, fn):
         self._callback_lock.acquire()
         self._finisked_callback = fn
         self._callback_lock.release()

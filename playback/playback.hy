@@ -23,17 +23,19 @@
   ;; TODO: Make methods block until state actually changed
 
   (defn play [self &optional index]
-    (let [cb (fn []
-               (with (playlist self)
-                 (.play-file self._player (. (.next playlist) path))))]
+    (let [play-next (fn []
+                      (with (playlist self)
+                        (let [song (.next playlist)]
+                         (unless (is None song)
+                           (.play-file self._player (. song path))))))]
       (with (playlist self)
         (when (not (is None index))
           (.stop self)
           (.nextup playlist index))
-        (.set_callback self._player cb)
+        (.set_callback self._player play-next)
         (with (self._player-lock)
           (if (is None (.current playlist))
-            (.play-file self._player (. (.next playlist) path))
+            (play-next)
             (.play self._player))))))
 
   (defn pause [self]

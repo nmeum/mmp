@@ -20,3 +20,7 @@
           (raise (MPDException ACKError.ARG "Bad song index"))))
       (ctx.playback.play))
     None))
+
+(with-decorator (commands.add "stop")
+  (defn stop [ctx args]
+    (.stop (. ctx playback))))

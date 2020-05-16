@@ -23,7 +23,7 @@
   (defn delete [ctx args]
     (with (playlist ctx.playback)
       (try
-        (.remove playlist (.to-range (first args) (.psize playlist)))
+        (.remove ctx.playback (.to-range (first args) (.psize playlist)))
         (except [IndexError]
           (raise (MPDException ACKError.ARG "Bad song index")))))))
 

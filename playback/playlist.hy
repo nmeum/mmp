@@ -51,9 +51,13 @@
 
   (defn remove [self range]
     (let [start (. range start) stop (. range stop)]
-      (if (= start stop)
+      (if (= (len range) 1)
         (.pop self._list start)
         (setv self._list (cut self._list start stop)))))
+
+  (defn reset [self]
+    (setv self._current None)
+    (setv self._next None))
 
   (defn nextup [self index]
     (if (>= index (len self._list))
@@ -62,7 +66,7 @@
 
   (defn next [self]
     (defn next-index [mode]
-      ;; TODO: Handle repeat mode
+      ;; TODO: Handle single mode
       ;; XXX: Maybe use threading macro (->)
       (if (not self._list)
         None

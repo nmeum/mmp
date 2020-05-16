@@ -8,27 +8,9 @@
     (setv self._player (GstPlayer))
     (setv self._player-lock (RLock))
     (setv self._playlist (Playlist))
-    (setv self._playlist-lock (Lock))
+    (setv self._playlist-lock (RLock))
 
-    (setv self._play-start (Event))
-    (setv self._player-ready (Event))
-
-    (.run self._player)
-    (setv self._thread (Thread :target self._playback
-                              :daemon True))
-    (.start self._thread))
-
-  (defn _playback [self]
-    (while True
-      (.wait self._play-start)
-      (let [song (with (p self) (.next p))]
-        (if (is None song)
-          (do
-            (.wait self._player-ready)
-            (.clear self._player-ready))
-          (with (self._player-lock)
-            (.play-file self._player (. song path)))))
-      (.block self._player)))
+    (.run self._player))
 
   (defn state [self]
     (let [state (with (self._player-lock)
@@ -38,26 +20,52 @@
         [(= state "pause") "pause"]
         [True "stop"])))
 
-  ;; TODO: Make methods block until state actually changed?
-  ;; In general: How should intertwined state changes be handled?
+  ;; TODO: Make methods block until state actually changed
 
   (defn play [self &optional index]
-    (when (not (is None index))
-      (.stop self)
+    (let [play-next (fn []
+                      (with (playlist self)
+                        (let [song (.next playlist)]
+                         (unless (is None song)
+                           (.play-file self._player (. song path))))))]
       (with (playlist self)
-        (.nextup playlist index))
-       (.set self._player-ready))
-    (.set self._play-start))
+        (when (not (is None index))
+          (.stop self)
+          (.nextup playlist index))
+        (.set_callback self._player play-next)
+        (with (self._player-lock)
+          (if (is None (.current playlist))
+            (play-next)
+            (.play self._player))))))
 
   (defn pause [self]
-    (.clear self._play-start)
+    (.clear_callback self._player)
     (with (self._player-lock)
       (.pause self._player)))
 
   (defn stop [self]
-    (.clear self._play-start)
+    (.clear_callback self._player)
+    (with (playlist self)
+      (.reset playlist))
     (with (self._player-lock)
       (.stop self._player)))
+
+  (defn next [self]
+    (with (playlist self)
+      (let [song (.next playlist)]
+        (if (is None song)
+          (.stop self)
+          (.play-file self._player (. song path))))))
+
+  ;; TODO: Implement prev
+
+  (defn remove [self range]
+    (with (playlist self)
+      (let [song (.current playlist)]
+        (if (and (not (is None song))
+                 (in (. song position) range))
+            (.next self)))
+      (.remove playlist range)))
 
   (defn __enter__ [self]
     """Context manager for aquiring access to the underlying playlist.

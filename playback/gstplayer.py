@@ -158,16 +158,18 @@ class GstPlayer(object):
 
     def pause(self):
         """Pause playback."""
-        self.player.set_state(Gst.State.PAUSED)
-        self._finished.set()
-        self._paused_event.wait()
+        if self._get_state() != Gst.State.PAUSED:
+            self.player.set_state(Gst.State.PAUSED)
+            self._finished.set()
+            self._paused_event.wait()
 
     def stop(self):
         """Halt playback."""
-        self.player.set_state(Gst.State.NULL)
-        self._finished.set()
-        self.cached_time = None
-        self._stopped_event.wait()
+        if self._get_state() != Gst.State.NULL:
+            self.player.set_state(Gst.State.NULL)
+            self._finished.set()
+            self.cached_time = None
+            self._stopped_event.wait()
 
     def run(self):
         """Start a new thread for the player.

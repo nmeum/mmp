@@ -68,7 +68,10 @@
       (let [song (.current playlist)]
         (if (and (not (is None song))
                  (in (. song position) range))
-            (.next self)))
+            (let [s (.next self)]
+              (if (or (is None s)
+                      (= (. s position) (. song position)))
+                (.stop self)))))
       (.remove playlist range)))
 
   (defn __enter__ [self]

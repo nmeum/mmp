@@ -25,8 +25,7 @@
       (let [t (.time self._player)]
         (if (= t (, 0 0))
           None
-          (, (round (first t) 3)
-             (round (last t) 3))))))
+          (tuple (map (fn [x] (round x 3)) t))))))
 
   ;; TODO: Make methods block until state actually changed
 

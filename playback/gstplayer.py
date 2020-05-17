@@ -69,8 +69,14 @@ class GstPlayer(object):
         self._playing_event = Event()
         self._paused_event  = Event()
 
+        # Our default finished callback resets the player state, we
+        # don't do this unconditionally as the Playback object registers
+        # a callback which plays the next song when playback fininshed.
+        # To make sure the reported state doesn't change between songs
+        # we don't want to reset the player state in this case.
+        self._finisked_callback = lambda x: self.player.set_state(Gst.State.NULL)
+
         self._callback_lock = Lock()
-        self._finisked_callback = None
         self._finished = Event() # set if playback finished
         self.cached_time = None
 
@@ -91,7 +97,6 @@ class GstPlayer(object):
         """Callback for status updates from GStreamer."""
         if message.type == Gst.MessageType.EOS:
             # file finished playing
-            self.player.set_state(Gst.State.NULL)
             self.cached_time = None
             self._finished.set()
 

@@ -69,13 +69,7 @@ class GstPlayer(object):
         self._playing_event = Event()
         self._paused_event  = Event()
 
-        # Our default finished callback resets the player state, we
-        # don't do this unconditionally as the Playback object registers
-        # a callback which plays the next song when playback fininshed.
-        # To make sure the reported state doesn't change between songs
-        # we don't want to reset the player state in this case.
-        self._finisked_callback = lambda x: self.player.set_state(Gst.State.NULL)
-
+        self._finisked_callback = None
         self._callback_lock = Lock()
         self._finished = Event() # set if playback finished
         self.cached_time = None
@@ -84,6 +78,10 @@ class GstPlayer(object):
         self.set_callback(None)
 
     def set_callback(self, fn):
+        """Sets a callback function invoked when EOS (end of stream) is
+        reached by GStreamer. The callback should return true if it has
+        changed the player state and false otherwise. If false is
+        returned the GstPlayer state is reset."""
         self._callback_lock.acquire()
         self._finisked_callback = fn
         self._callback_lock.release()
@@ -102,7 +100,8 @@ class GstPlayer(object):
 
             self._callback_lock.acquire()
             if self._finisked_callback:
-                self._finisked_callback()
+                if not self._finisked_callback():
+                    self.player.set_state(Gst.State.NULL)
             self._callback_lock.release()
 
         elif message.type == Gst.MessageType.ERROR:

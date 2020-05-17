@@ -26,8 +26,11 @@
     (let [play-next (fn []
                       (with (playlist self)
                         (let [song (.next playlist)]
-                         (unless (is None song)
-                           (.play-file self._player (. song path))))))]
+                         (if (is None song)
+                           False
+                           (do
+                             (.play-file self._player (. song path))
+                             True)))))]
       (with (playlist self)
         (when (not (is None index))
           (.stop self)

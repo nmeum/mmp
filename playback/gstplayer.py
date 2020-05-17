@@ -20,7 +20,7 @@ music player.
 import urllib.parse
 import _thread
 import time
-from threading import Event, Lock
+from threading import BoundedSemaphore, Event, Lock
 
 import gi
 gi.require_version('Gst', '1.0')
@@ -65,6 +65,10 @@ class GstPlayer(object):
         bus.add_signal_watch()
         bus.connect("message", self._handle_message)
 
+        self._stopped_event = Event()
+        self._playing_event = Event()
+        self._paused_event  = Event()
+
         self._callback_lock = Lock()
         self._finisked_callback = None
         self._finished = Event() # set if playback finished
@@ -103,6 +107,15 @@ class GstPlayer(object):
             err, _ = message.parse_error()
             raise RuntimeError("GStreamer Error: {}".format(err))
 
+        elif message.type == Gst.MessageType.STATE_CHANGED:
+            if isinstance(message.src, Gst.Pipeline):
+                old_state, new_state, _ = message.parse_state_changed()
+                if new_state == Gst.State.PLAYING:
+                    self._playing_event.set()
+                elif new_state == Gst.State.PAUSED:
+                    self._paused_event.set()
+                elif new_state == Gst.State.NULL:
+                    self._stopped_event.set()
 
     def state(self):
         """Return current player state as a string."""
@@ -130,23 +143,27 @@ class GstPlayer(object):
         self.player.set_property("uri", uri)
         self.player.set_state(Gst.State.PLAYING)
         self._finished.clear()
+        self._playing_event.wait()
 
     def play(self):
         """If paused, resume playback."""
         if self._get_state() == Gst.State.PAUSED:
             self.player.set_state(Gst.State.PLAYING)
             self._finished.clear()
+            self._playing_event.wait()
 
     def pause(self):
         """Pause playback."""
         self.player.set_state(Gst.State.PAUSED)
         self._finished.set()
+        self._paused_event.wait()
 
     def stop(self):
         """Halt playback."""
         self.player.set_state(Gst.State.NULL)
         self._finished.set()
         self.cached_time = None
+        self._stopped_event.wait()
 
     def run(self):
         """Start a new thread for the player.

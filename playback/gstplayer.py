@@ -65,7 +65,6 @@ class GstPlayer(object):
         bus.add_signal_watch()
         bus.connect("message", self._handle_message)
 
-        self._stopped_event = Event()
         self._playing_event = Event()
         self._paused_event  = Event()
 
@@ -118,8 +117,6 @@ class GstPlayer(object):
                     self._playing_event.set()
                 elif new_state == Gst.State.PAUSED:
                     self._paused_event.set()
-                elif new_state == Gst.State.NULL:
-                    self._stopped_event.set()
 
     def state(self):
         """Return current player state as a string."""
@@ -158,18 +155,18 @@ class GstPlayer(object):
 
     def pause(self):
         """Pause playback."""
-        if self._get_state() != Gst.State.PAUSED:
+        if self._get_state() == Gst.State.PLAYING:
             self.player.set_state(Gst.State.PAUSED)
             self._finished.set()
             self._paused_event.wait()
 
     def stop(self):
         """Halt playback."""
-        if self._get_state() != Gst.State.NULL:
+        if self._get_state() == Gst.State.PLAYING:
             self.player.set_state(Gst.State.NULL)
             self._finished.set()
             self.cached_time = None
-            self._stopped_event.wait()
+            self._paused_event.wait()
 
     def run(self):
         """Start a new thread for the player.

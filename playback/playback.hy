@@ -58,7 +58,8 @@
       (let [song (.next playlist)]
         (if (is None song)
           (.stop self)
-          (.play-file self._player (. song path))))))
+          (.play-file self._player (. song path)))
+        song)))
 
   ;; TODO: Implement prev
 

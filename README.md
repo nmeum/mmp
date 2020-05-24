@@ -42,8 +42,6 @@ As such, this software has the following dependencies:
 * The [gst-python][py3-gst homepage] module
 * The [libmpdserver][libmpdserver github] parser library
 * The [beets][beets homepage] music manager
-	* Including the [web plugin][beets web]
-	* Required configuration is described below
 
 ## Setup
 
@@ -54,19 +52,8 @@ this reason, just build the library manually for now using:
 	$ git clone --recursive https://github.com/nmeum/libmpdserver
 	$ make -C libmpdserver libmpdserver.so
 
-Afterwards, setup the beets web plugin by following the upstream
-[instructions][beets web]. This presupposes that [beets][beets homepage]
-itself has already been setup. Regarding the configuration of this
-plugin, the `include_paths` option **must** be enabled. For example, by
-adding the following to your beets configuration file:
-
-	web:
-	  include_paths: True
-
-Finally, invoke mmp itself using:
-
-	$ export LD_LIBRARY_PATH="<PATH TO LIBMPDSERVER REPOSITORY>"
-	$ hy mmp.hy "<URL OF BEETS WEB PLUGIN>"
+Afterwards, install and configure beets if you haven't already. For
+further information consult the [beets documentation][beets quickstart].
 
 ## Tests
 
@@ -91,7 +78,7 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
 
 [libmpdserver github]: https://github.com/nmeum/libmpdserver
 [beets homepage]: https://beets.io/
-[beets web]: https://beets.readthedocs.io/en/latest/plugins/web.html
+[beets quickstart]: https://beets.readthedocs.io/en/stable/guides/main.html
 [hy homepage]: https://docs.hylang.org
 [py3-gst homepage]: https://gstreamer.freedesktop.org/bindings/python.html
 [gstreamer homepage]: https://gstreamer.freedesktop.org/

@@ -7,8 +7,11 @@
 (with-decorator (commands.add "add")
   (defn add [ctx args]
     (let [path     (first args)
-          items    (.query-path ctx.beets path)
-          no-exist (MPDException ACKError.NO_EXIST "no such file")]
+          no-exist (MPDException ACKError.NO_EXIST "no such file")
+          items    (-> (with [(.transaction (. ctx beets))]
+                           (.items (. ctx beets)
+                                   (.format "path:{}" path)))
+                       list)]
       (if items
         (with (playlist ctx.playback)
           (try

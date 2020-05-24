@@ -67,17 +67,16 @@
   (defn next [self]
     (defn next-index [mode]
       ;; TODO: Handle single mode
-      ;; XXX: Maybe use threading macro (->)
-      (if (not self._list)
-        None
-        (if (is None self._current)
-          0
+      (cond
+        [(not self._list) None]
+        [(is None self._current) 0]
+        [True
           (let [n (if (get mode :random)
                       (randrange (len self._list))
                       (inc self._current))]
             (if (>= n (len self._list))
               (if (get mode :repeat) 0 None)
-              n)))))
+              n))]))
 
     (if (get self.mode :consume)
       (.pop self._current))

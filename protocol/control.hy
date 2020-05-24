@@ -21,7 +21,7 @@
       (try
         (ctx.playback.play (first args))
         (except [e IndexError]
-          (raise (MPDException ACKError.ARG "Bad song index"))))
+          (raise MPDBadIndexError)))
       (ctx.playback.play))
     None))
 

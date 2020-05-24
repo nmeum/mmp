@@ -26,7 +26,7 @@
       (try
         (.remove ctx.playback (.to-range (first args) (.psize playlist)))
         (except [IndexError]
-          (raise (MPDException ACKError.ARG "Bad song index")))))))
+          (raise MPDBadIndexError))))))
 
 ;; TODO: Respect optional song position argument.
 (with-decorator (commands.add "playlistinfo")

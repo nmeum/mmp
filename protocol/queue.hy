@@ -6,19 +6,17 @@
 
 (with-decorator (commands.add "add")
   (defn add [ctx args]
-    (let [path     (first args)
-          no-exist (MPDException ACKError.NO_EXIST "no such file")
-          items    (-> (with [(.transaction (. ctx beets))]
-                           (.items (. ctx beets)
-                                   (.format "path:{}" path)))
-                       list)]
+    (let [items (-> (with [(.transaction (. ctx beets))]
+                        (.items (. ctx beets)
+                                (.format "path:{}" (first args))))
+                    list)]
       (if items
         (with (playlist ctx.playback)
           (try
             (ap-each items (.add playlist (util.create-song it)))
           (except [FileNotFoundError]
-            (raise no-exist))))
-        (raise no-exist)))))
+            (raise MPDNotFoundError))))
+        (raise MPDNotFoundError)))))
 
 ;; TODO: Handle case where the delete song is the current song (requires
 ;; player to skip to the next song in the playlist or stop if none).

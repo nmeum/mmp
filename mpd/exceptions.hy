@@ -28,3 +28,7 @@
   (defn __str__ [self]
     (% "ACK [%d@%d] {%s} %s" (, self.code.value self.lst-num
                                 self.cur-cmd self.msg))))
+
+(defclass MPDNotFoundError [MPDException]
+  (defn __init__ [self]
+    (.__init__ (super) ACKError.NO_EXIST "no such file")))

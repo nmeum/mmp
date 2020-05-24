@@ -66,10 +66,13 @@
 
   (defn next [self]
     (defn next-index [mode]
-      ;; TODO: Handle single mode
       (cond
         [(not self._list) None]
         [(is None self._current) 0]
+        [(get mode :single)
+           (if (get mode :repeat)
+             (. self _current)
+             None)]
         [True
           (let [n (if (get mode :random)
                       (randrange (len self._list))

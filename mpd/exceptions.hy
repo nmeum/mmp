@@ -32,3 +32,7 @@
 (defclass MPDNotFoundError [MPDException]
   (defn __init__ [self]
     (.__init__ (super) ACKError.NO_EXIST "no such file")))
+
+(defclass MPDBadIndexError [MPDException]
+  (defn __init__ [self]
+    (.__init__ (super) ACKError.ARG "Bad song index")))

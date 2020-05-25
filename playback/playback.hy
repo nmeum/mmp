@@ -28,23 +28,24 @@
           (tuple (map (fn [x] (round x 3)) t))))))
 
   (defn play [self &optional index]
-    (let [play-next (fn []
-                      (with (playlist self)
-                        (let [song (.next playlist)]
-                         (if (is None song)
-                           False
-                           (do
-                             (.play-file self._player (. song path))
-                             True)))))]
+    (defn play-next []
       (with (playlist self)
-        (when (not (is None index))
-          (.stop self)
-          (.nextup playlist index))
-        (.set_callback self._player play-next)
-        (with (self._player-lock)
-          (if (is None (.current playlist))
-            (play-next)
-            (.play self._player))))))
+        (let [song (.next playlist)]
+          (if (is None song)
+            False
+            (do
+              (.play-file self._player (. song path))
+              True)))))
+
+    (with (playlist self)
+      (when (not (is None index))
+        (.stop self)
+        (.nextup playlist index))
+      (.set_callback self._player play-next)
+      (with (self._player-lock)
+        (if (is None (.current playlist))
+          (play-next)
+          (.play self._player)))))
 
   (defn pause [self]
     (.clear_callback self._player)

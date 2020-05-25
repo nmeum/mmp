@@ -55,6 +55,13 @@ this reason, just build the library manually for now using:
 Afterwards, install and configure beets if you haven't already. For
 further information consult the [beets documentation][beets quickstart].
 
+## Usage
+
+To use this software with an existing beets library, start it by
+pointing it to your beets database. For example:
+
+	$ hy mmp.hy -a 127.0.0.1 -p 6600 ~/.config/beets/library.db
+
 ## Tests
 
 If [mpc][mpc homepage] is installed test can be invoked using:

@@ -27,8 +27,6 @@
           None
           (tuple (map (fn [x] (round x 3)) t))))))
 
-  ;; TODO: Make methods block until state actually changed
-
   (defn play [self &optional index]
     (let [play-next (fn []
                       (with (playlist self)
